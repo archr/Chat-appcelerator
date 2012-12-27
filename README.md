@@ -1,1 +1,1 @@
-#Chat in app using Appcelerator and Socket.io#
+#Chat # in app using Appcelerator and Socket.io
