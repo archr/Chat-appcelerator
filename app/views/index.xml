@@ -1,0 +1,21 @@
+<Alloy>
+	<Window >
+		<View id="master">
+			<TableView id="rooms" />			
+		</View>
+		<View id="detail">
+			<View id="header">
+				<View id="options">					
+				</View>
+				<Label id="room" />				
+			</View>
+			<View id="body">
+				<TableView id="conversation_table" />
+				<View id="container_message">
+					<TextArea id="message" />
+					<Button id="send" />					
+				</View>				
+			</View>
+		</View>
+	</Window>
+</Alloy>
