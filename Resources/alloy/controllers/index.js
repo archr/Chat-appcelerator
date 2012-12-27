@@ -75,6 +75,7 @@ function Controller() {
         bottom: "45px",
         width: "100%",
         backgroundColor: "red",
+        minRowHeight: "30px",
         id: "conversation_table"
     }), "TableView", $.__views.body);
     $.__views.body.add($.__views.conversation_table);
@@ -105,7 +106,7 @@ function Controller() {
     $.__views.container_message.add($.__views.send);
     exports.destroy = function() {};
     _.extend($, $.__views);
-    var chat = require("chat");
+    var chat = require("chat"), nMessages = 0;
     $.options.on("click", function(e) {
         if (e.source.active) {
             $.detail.animate({
@@ -130,14 +131,17 @@ function Controller() {
                 alert(e);
             },
             message: function(e) {
-                alert(e);
+                $.conversation_table.appendRow(Alloy.createController("rowMessage", {
+                    message: e.text
+                }).getView());
+                $.conversation_table.scrollToIndex(nMessages, {
+                    animated: !0
+                });
+                nMessages++;
             },
-            disconnect: function(e) {
-                alert("disconnect...");
-            }
+            disconnect: function(e) {}
         });
         setTimeout(function() {
-            alert("change");
             $.message.softKeyboardOnFocus = Titanium.UI.Android.SOFT_KEYBOARD_SHOW_ON_FOCUS;
         }, 500);
     });

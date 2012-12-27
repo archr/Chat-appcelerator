@@ -1,0 +1,5 @@
+<Alloy>
+	<TableViewRow  id="rowMessage">
+		<Label id="message" />
+	</TableViewRow>
+</Alloy>

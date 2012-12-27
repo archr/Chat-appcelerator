@@ -1,4 +1,5 @@
 var chat = require('chat');
+var nMessages = 0;
 
 $.options.on('click', function(e){
 	if(e.source.active){
@@ -21,19 +22,24 @@ $.index.on('open', function(){
 		joinResult: function(e){			
 			$.room.text = "Room: "+ e.room;
 		},
-		nameResult: function(e){
+		nameResult: function(e){			
 			alert(e);
 		},
-		message: function(e){
-			alert(e);
+		message: function(e){			
+			$.conversation_table.appendRow(Alloy.createController('rowMessage',{
+				message:e.text
+			}).getView());
+			$.conversation_table.scrollToIndex(nMessages,{
+                animated:true
+            });
+			nMessages++;						
 		},
 		disconnect: function(e){
-			alert('disconnect...');
+			//alert('disconnect...');
 		}
 	});
 	
-	setTimeout(function(){
-		alert('change');
+	setTimeout(function(){		
 	$.message.softKeyboardOnFocus = Titanium.UI.Android.SOFT_KEYBOARD_SHOW_ON_FOCUS;
 	},500);	
 	
