@@ -24,6 +24,7 @@ function Controller() {
     exports.destroy = function() {};
     _.extend($, $.__views);
     var args = arguments[0] || {};
+    args.me && ($.message.textAlign = "right");
     $.message.text = args.message || "";
     _.extend($, exports);
 }

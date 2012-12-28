@@ -106,7 +106,7 @@ function Controller() {
     $.__views.container_message.add($.__views.send);
     exports.destroy = function() {};
     _.extend($, $.__views);
-    var chat = require("chat"), nMessages = 0;
+    var chat = require("chat"), nMessages = 0, room = "Lobby";
     $.options.on("click", function(e) {
         if (e.source.active) {
             $.detail.animate({
@@ -126,13 +126,15 @@ function Controller() {
         chat.connect({
             joinResult: function(e) {
                 $.room.text = "Room: " + e.room;
+                room = e.room;
             },
             nameResult: function(e) {
                 alert(e);
             },
             message: function(e) {
                 $.conversation_table.appendRow(Alloy.createController("rowMessage", {
-                    message: e.text
+                    message: e.text,
+                    me: !1
                 }).getView());
                 $.conversation_table.scrollToIndex(nMessages, {
                     animated: !0
@@ -144,6 +146,23 @@ function Controller() {
         setTimeout(function() {
             $.message.softKeyboardOnFocus = Titanium.UI.Android.SOFT_KEYBOARD_SHOW_ON_FOCUS;
         }, 500);
+    });
+    $.send.on("singletap", function(e) {
+        if ($.message.value) {
+            chat.message({
+                room: room,
+                text: $.message.value
+            });
+            $.conversation_table.appendRow(Alloy.createController("rowMessage", {
+                message: $.message.value,
+                me: !0
+            }).getView());
+            $.conversation_table.scrollToIndex(nMessages, {
+                animated: !0
+            });
+            $.message.value = "";
+            nMessages++;
+        }
     });
     $.index.open();
     _.extend($, exports);
