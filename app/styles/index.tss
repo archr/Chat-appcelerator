@@ -3,10 +3,33 @@
 }, 
 "#master": {
 	//backgroundColor:'red',
-	left:0,
-	width:'270px',
+	left:0,	
 	top:0,
-	height:'100%'
+	height:'100%',
+	layout:'vertical'
+},
+"#rooms": {
+	width:'100%',
+	height:'40px',
+	text:'Rooms',
+	font:{
+		fontSize:'20px'
+	},
+	color:'black',
+	textAlign:'left',
+	backgroundColor:'green'
+},
+"#textFieldRooms":{	
+	height:'40px',
+	top:'5px',
+	left:'5px',
+	right:'5px',
+	hintText:'Change rooms?',
+	softKeyboardOnFocus: Titanium.UI.Android.SOFT_KEYBOARD_HIDE_ON_FOCUS,
+	returnKeyType : Ti.UI.RETURNKEY_DONE
+},
+"#tableRooms":{
+	
 },
 "#detail": {
 	backgroundColor:'blue',

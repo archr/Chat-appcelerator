@@ -9,16 +9,40 @@ function Controller() {
     $.addTopLevelView($.__views.index);
     $.__views.master = A$(Ti.UI.createView({
         left: 0,
-        width: "270px",
         top: 0,
         height: "100%",
+        layout: "vertical",
         id: "master"
     }), "View", $.__views.index);
     $.__views.index.add($.__views.master);
-    $.__views.rooms = A$(Ti.UI.createTableView({
+    $.__views.rooms = A$(Ti.UI.createLabel({
+        width: "100%",
+        height: "40px",
+        text: "Rooms",
+        font: {
+            fontSize: "20px"
+        },
+        color: "black",
+        textAlign: "left",
+        backgroundColor: "green",
         id: "rooms"
-    }), "TableView", $.__views.master);
+    }), "Label", $.__views.master);
     $.__views.master.add($.__views.rooms);
+    $.__views.textFieldRooms = A$(Ti.UI.createTextField({
+        height: "40px",
+        top: "5px",
+        left: "5px",
+        right: "5px",
+        hintText: "Change rooms?",
+        softKeyboardOnFocus: Titanium.UI.Android.SOFT_KEYBOARD_HIDE_ON_FOCUS,
+        returnKeyType: Ti.UI.RETURNKEY_DONE,
+        id: "textFieldRooms"
+    }), "TextField", $.__views.master);
+    $.__views.master.add($.__views.textFieldRooms);
+    $.__views.tableRooms = A$(Ti.UI.createTableView({
+        id: "tableRooms"
+    }), "TableView", $.__views.master);
+    $.__views.master.add($.__views.tableRooms);
     $.__views.detail = A$(Ti.UI.createView({
         backgroundColor: "blue",
         left: 0,
@@ -130,6 +154,7 @@ function Controller() {
     exports.destroy = function() {};
     _.extend($, $.__views);
     var chat = require("chat"), nMessages = 0, room = "Lobby";
+    $.master.width = Ti.Platform.displayCaps.platformWidth - 45 + "px";
     $.options.on("click", function(e) {
         if (e.source.active) {
             $.detail.animate({
@@ -148,7 +173,7 @@ function Controller() {
     $.index.on("open", function() {
         chat.connect({
             joinResult: function(e) {
-                $.room.text = "Room: " + e.room;
+                $.room.text = e.room;
                 room = e.room;
             },
             nameResult: function(e) {
@@ -168,6 +193,7 @@ function Controller() {
         });
         setTimeout(function() {
             $.message.softKeyboardOnFocus = Titanium.UI.Android.SOFT_KEYBOARD_SHOW_ON_FOCUS;
+            $.textFieldRooms.softKeyboardOnFocus = Titanium.UI.Android.SOFT_KEYBOARD_SHOW_ON_FOCUS;
         }, 500);
     });
     $.send.on("singletap", function(e) {
@@ -186,6 +212,9 @@ function Controller() {
             $.message.value = "";
             nMessages++;
         }
+    });
+    $.textFieldRooms.on("return", function() {
+        Ti.UI.Android.hideSoftKeyboard();
     });
     $.index.open();
     _.extend($, exports);

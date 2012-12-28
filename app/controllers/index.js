@@ -2,6 +2,8 @@ var chat = require('chat');
 var nMessages = 0;
 var room = 'Lobby'
 
+$.master.width = (Ti.Platform.displayCaps.platformWidth-45)+'px';
+
 $.options.on('click', function(e){
 	if(e.source.active){
 		$.detail.animate({
@@ -47,13 +49,14 @@ $.index.on('open', function(){
 	});
 	
 	setTimeout(function(){		
-	$.message.softKeyboardOnFocus = Titanium.UI.Android.SOFT_KEYBOARD_SHOW_ON_FOCUS;
+		$.message.softKeyboardOnFocus = Titanium.UI.Android.SOFT_KEYBOARD_SHOW_ON_FOCUS;
+		$.textFieldRooms.softKeyboardOnFocus = Titanium.UI.Android.SOFT_KEYBOARD_SHOW_ON_FOCUS;
 	},500);	
 	
 });
 
 $.send.on('singletap', function(e){
-	if($.message.value){
+	if($.message.value){		
 		chat.message({
 			room:room,
 			text: $.message.value
@@ -70,7 +73,13 @@ $.send.on('singletap', function(e){
 		
 		$.message.value = '';
 		nMessages++;
+		
 	}
+	Ti.UI.Android.hideSoftKeyboard();
+});
+
+$.textFieldRooms.on('return', function(){
+	Ti.UI.Android.hideSoftKeyboard();
 });
 
 

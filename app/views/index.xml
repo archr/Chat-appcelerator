@@ -1,7 +1,9 @@
 <Alloy>
 	<Window >
 		<View id="master">
-			<TableView id="rooms" />			
+			<Label id="rooms">
+			<TextField id="textFieldRooms" />
+			<TableView id="tableRooms" />			
 		</View>
 		<View id="detail">
 			<View id="header">
