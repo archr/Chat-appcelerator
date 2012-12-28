@@ -104,6 +104,14 @@ function Controller() {
             left: "0px"
         });
     }
+    function textRoom() {
+        var newRoom = $.textFieldRooms.value.split(" ");
+        room = newRoom[0];
+        $.textFieldRooms.value = "";
+        closeKeyboard();
+        changeRoom();
+        closeMenu();
+    }
     require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     $model = arguments[0] ? arguments[0].$model : null;
     var $ = this, exports = {}, __defers = {};
@@ -269,7 +277,7 @@ function Controller() {
     $.master.width = Ti.Platform.displayCaps.platformWidth - 45 + "px";
     $.options.on("click", optionsClick);
     $.send.on("singletap", sendMessage);
-    $.textFieldRooms.on("return", closeKeyboard);
+    $.textFieldRooms.on("return", textRoom);
     $.tableRooms.on("click", tableRoomsClick);
     $.index.on("open", inOpen);
     $.index.open();

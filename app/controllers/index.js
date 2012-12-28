@@ -4,15 +4,17 @@ var room = 'Lobby'
 
 $.master.width = (Ti.Platform.displayCaps.platformWidth-45)+'px';
 
+//Events
 $.options.on('click', optionsClick);
 $.send.on('singletap', sendMessage);
-$.textFieldRooms.on('return', closeKeyboard);
+$.textFieldRooms.on('return', textRoom);
 $.tableRooms.on('click', tableRoomsClick);
 $.index.on('open', inOpen);
 
-
 $.index.open();
 
+
+//Functions
 function inOpen(e){
 	chat.connect({
 		joinResult: joinResult,				
@@ -139,5 +141,14 @@ function closeMenu(){
 		duration:200,
 		left:'0px'
 	});
+}
+
+function textRoom(){
+	var newRoom = $.textFieldRooms.value.split(' ');	
+	room = newRoom[0];
+	$.textFieldRooms.value = '';
+	closeKeyboard();
+	changeRoom();
+	closeMenu();	
 }
 
