@@ -16,6 +16,9 @@ exports.connect = function(o) {
     socket.on("message", function(e) {
         o.message && o.message(e);
     });
+    socket.on("rooms", function(e) {
+        o.rooms && o.rooms(e);
+    });
     socket.on("disconnect", function() {
         o.disconnect && o.disconnect();
         exports.disconnect();
@@ -31,6 +34,16 @@ exports.message = function(e) {
     });
 };
 
+exports.room = function(e) {
+    socket && socket.emit("join", {
+        newRoom: e.room
+    });
+};
+
 exports.disconnect = function() {
     socket && socket.disconnect();
+};
+
+exports.rooms = function() {
+    socket.emit("rooms");
 };

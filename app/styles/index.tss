@@ -29,7 +29,13 @@
 	returnKeyType : Ti.UI.RETURNKEY_DONE
 },
 "#tableRooms":{
-	
+	top:0,
+	left:0,
+	width:'100%',
+	bottom:0,
+	backgroundColor:'green',
+	separatorColor:'transparent',
+	minRowHeight: '40px',
 },
 "#detail": {
 	backgroundColor:'blue',

@@ -24,7 +24,11 @@ exports.connect = function(o){
 	});
 	
 	socket.on("message", function(e){
-		if(o.message) o .message(e);
+		if(o.message) o.message(e);
+	});
+	
+	socket.on('rooms', function(e){	
+		if(o.rooms) o.rooms(e);
 	});
 	
 	socket.on('disconnect', function(){
@@ -52,8 +56,20 @@ exports.message = function(e){
 	
 }
 
+exports.room = function(e){
+	if(socket){
+		socket.emit('join', {
+			newRoom:e.room			
+		});
+	}
+}
+
 exports.disconnect = function(){
 	if(socket){
 		socket.disconnect();
 	}
+}
+
+exports.rooms= function(){
+	socket.emit('rooms');
 }

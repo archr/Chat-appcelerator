@@ -1,0 +1,15 @@
+"#rowRoom": {
+	//backgroundColor: "blue",	
+	height: Ti.UI.SIZE,
+	width: Ti.UI.SIZE
+},
+"#room": {
+	color:'black',
+	font:{
+		fontSize:'16px'
+	},
+	left:'10px',
+	right:'5px',
+	top:'3px',
+	height:Ti.UI.SIZE
+}

@@ -4,83 +4,140 @@ var room = 'Lobby'
 
 $.master.width = (Ti.Platform.displayCaps.platformWidth-45)+'px';
 
-$.options.on('click', function(e){
-	if(e.source.active){
-		$.detail.animate({
-			duration:200,
-			left:'0px'
-		});
-		e.source.active = false;
-	}else{
-		$.detail.animate({
-			duration:200,
-			left:(Ti.Platform.displayCaps.platformWidth-45) + 'px'
-		});	
-		e.source.active = true;
-	}	
-});
+$.options.on('click', optionsClick);
+$.send.on('singletap', sendMessage);
+$.textFieldRooms.on('return', closeKeyboard);
+$.tableRooms.on('click', tableRoomsClick);
+$.index.on('open', inOpen);
 
-$.index.on('open', function(){	
+
+$.index.open();
+
+function inOpen(e){
 	chat.connect({
-		joinResult: function(e){			
-			$.room.text = e.room;
-			room = e.room;
-		},
-		nameResult: function(e){		
-			if(e.success){
-				$.user.text = e.name
-				//e.name
-			}	
-			//alert(e);
-		},
-		message: function(e){			
-			$.conversation_table.appendRow(Alloy.createController('rowMessage',{
-				message:e.text,
-				me:false
-			}).getView());
-			$.conversation_table.scrollToIndex(nMessages,{
-                animated:true
-            });
-			nMessages++;						
-		},
-		disconnect: function(e){
-			//alert('disconnect...');
-		}
+		joinResult: joinResult,				
+		nameResult: nameResult,				
+		message: newMessage,		 		
+		disconnect: disconnect,			
+		rooms: createRooms			
 	});
+	
+	setInterval(function(){
+		chat.rooms();
+	},3000);
 	
 	setTimeout(function(){		
 		$.message.softKeyboardOnFocus = Titanium.UI.Android.SOFT_KEYBOARD_SHOW_ON_FOCUS;
 		$.textFieldRooms.softKeyboardOnFocus = Titanium.UI.Android.SOFT_KEYBOARD_SHOW_ON_FOCUS;
-	},500);	
-	
-});
+	},500);
+}
 
-$.send.on('singletap', function(e){
-	if($.message.value){		
-		chat.message({
-			room:room,
-			text: $.message.value
-		});				
-		
+function createRooms(e){
+	var data = [];			
+	for(var room in e){
+		room = room.substring(1, room.length); 
+		if(room){
+			var row = Alloy.createController('rowRoom',{
+				room:room
+			}).getView();
+			data.push(row);
+		}
+	}
+	$.tableRooms.setData(data);
+}
+
+function disconnect(e){
+	
+}
+
+function newMessage(e){
+	$.conversation_table.appendRow(Alloy.createController('rowMessage',{
+		message:e.text,
+		me:false
+	}).getView());
+	
+	scrollToIndex();
+	nMessages++;
+}
+
+function joinResult(e){
+	$.room.text = e.room;
+	room = e.room;
+}
+
+function nameResult(e){
+	if(e.success){
+		$.user.text = e.name			
+	}
+}
+
+function sendMessage(e){
+	if($.message.value){									
 		$.conversation_table.appendRow(Alloy.createController('rowMessage',{
 			message:$.message.value,
 			me:true
 		}).getView());
 		
-		$.conversation_table.scrollToIndex(nMessages,{
-			animated:true
-		});
-		
+		chatMessage();
+		scrollToIndex();		
 		$.message.value = '';
-		nMessages++;
-		
+		nMessages++;		
 	}
+	closeKeyboard();
+}
+
+function chatMessage(){
+	chat.message({
+		room:room,
+		text: $.message.value
+	});
+}
+
+function scrollToIndex(){
+	$.conversation_table.scrollToIndex(nMessages,{
+		animated:true
+	});
+}
+
+function tableRoomsClick(e){
+	if(e.rowData.id === 'rowRoom'){
+		room = e.row.at;
+		changeRoom();			
+		closeMenu();
+	}	
+}
+
+function changeRoom(){	
+	chat.room({
+		room:room		
+	});
+}
+
+function closeKeyboard(){
 	Ti.UI.Android.hideSoftKeyboard();
-});
+}
 
-$.textFieldRooms.on('return', function(){
-	Ti.UI.Android.hideSoftKeyboard();
-});
+function optionsClick(e){
+	if(e.source.active){
+		closeMenu();
+		e.source.active = false;
+	}else{
+		openMenu();	
+		e.source.active = true;
+	}
+}
 
+function openMenu(){
+	$.detail.animate({
+		duration:200,
+		left:(Ti.Platform.displayCaps.platformWidth-45) + 'px'
+	});		
+}
 
-$.index.open();
+function closeMenu(){
+	$.detail.animate({
+		duration:200,
+		left:'0px'
+	});
+}
+

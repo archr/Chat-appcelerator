@@ -1,4 +1,109 @@
 function Controller() {
+    function inOpen(e) {
+        chat.connect({
+            joinResult: joinResult,
+            nameResult: nameResult,
+            message: newMessage,
+            disconnect: disconnect,
+            rooms: createRooms
+        });
+        setInterval(function() {
+            chat.rooms();
+        }, 3000);
+        setTimeout(function() {
+            $.message.softKeyboardOnFocus = Titanium.UI.Android.SOFT_KEYBOARD_SHOW_ON_FOCUS;
+            $.textFieldRooms.softKeyboardOnFocus = Titanium.UI.Android.SOFT_KEYBOARD_SHOW_ON_FOCUS;
+        }, 500);
+    }
+    function createRooms(e) {
+        var data = [];
+        for (var room in e) {
+            room = room.substring(1, room.length);
+            if (room) {
+                var row = Alloy.createController("rowRoom", {
+                    room: room
+                }).getView();
+                data.push(row);
+            }
+        }
+        $.tableRooms.setData(data);
+    }
+    function disconnect(e) {}
+    function newMessage(e) {
+        $.conversation_table.appendRow(Alloy.createController("rowMessage", {
+            message: e.text,
+            me: !1
+        }).getView());
+        scrollToIndex();
+        nMessages++;
+    }
+    function joinResult(e) {
+        $.room.text = e.room;
+        room = e.room;
+    }
+    function nameResult(e) {
+        e.success && ($.user.text = e.name);
+    }
+    function sendMessage(e) {
+        if ($.message.value) {
+            $.conversation_table.appendRow(Alloy.createController("rowMessage", {
+                message: $.message.value,
+                me: !0
+            }).getView());
+            chatMessage();
+            scrollToIndex();
+            $.message.value = "";
+            nMessages++;
+        }
+        closeKeyboard();
+    }
+    function chatMessage() {
+        chat.message({
+            room: room,
+            text: $.message.value
+        });
+    }
+    function scrollToIndex() {
+        $.conversation_table.scrollToIndex(nMessages, {
+            animated: !0
+        });
+    }
+    function tableRoomsClick(e) {
+        if (e.rowData.id === "rowRoom") {
+            room = e.row.at;
+            changeRoom();
+            closeMenu();
+        }
+    }
+    function changeRoom() {
+        chat.room({
+            room: room
+        });
+    }
+    function closeKeyboard() {
+        Ti.UI.Android.hideSoftKeyboard();
+    }
+    function optionsClick(e) {
+        if (e.source.active) {
+            closeMenu();
+            e.source.active = !1;
+        } else {
+            openMenu();
+            e.source.active = !0;
+        }
+    }
+    function openMenu() {
+        $.detail.animate({
+            duration: 200,
+            left: Ti.Platform.displayCaps.platformWidth - 45 + "px"
+        });
+    }
+    function closeMenu() {
+        $.detail.animate({
+            duration: 200,
+            left: "0px"
+        });
+    }
     require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     $model = arguments[0] ? arguments[0].$model : null;
     var $ = this, exports = {}, __defers = {};
@@ -40,6 +145,13 @@ function Controller() {
     }), "TextField", $.__views.master);
     $.__views.master.add($.__views.textFieldRooms);
     $.__views.tableRooms = A$(Ti.UI.createTableView({
+        top: 0,
+        left: 0,
+        width: "100%",
+        bottom: 0,
+        backgroundColor: "green",
+        separatorColor: "transparent",
+        minRowHeight: "40px",
         id: "tableRooms"
     }), "TableView", $.__views.master);
     $.__views.master.add($.__views.tableRooms);
@@ -155,67 +267,11 @@ function Controller() {
     _.extend($, $.__views);
     var chat = require("chat"), nMessages = 0, room = "Lobby";
     $.master.width = Ti.Platform.displayCaps.platformWidth - 45 + "px";
-    $.options.on("click", function(e) {
-        if (e.source.active) {
-            $.detail.animate({
-                duration: 200,
-                left: "0px"
-            });
-            e.source.active = !1;
-        } else {
-            $.detail.animate({
-                duration: 200,
-                left: Ti.Platform.displayCaps.platformWidth - 45 + "px"
-            });
-            e.source.active = !0;
-        }
-    });
-    $.index.on("open", function() {
-        chat.connect({
-            joinResult: function(e) {
-                $.room.text = e.room;
-                room = e.room;
-            },
-            nameResult: function(e) {
-                e.success && ($.user.text = e.name);
-            },
-            message: function(e) {
-                $.conversation_table.appendRow(Alloy.createController("rowMessage", {
-                    message: e.text,
-                    me: !1
-                }).getView());
-                $.conversation_table.scrollToIndex(nMessages, {
-                    animated: !0
-                });
-                nMessages++;
-            },
-            disconnect: function(e) {}
-        });
-        setTimeout(function() {
-            $.message.softKeyboardOnFocus = Titanium.UI.Android.SOFT_KEYBOARD_SHOW_ON_FOCUS;
-            $.textFieldRooms.softKeyboardOnFocus = Titanium.UI.Android.SOFT_KEYBOARD_SHOW_ON_FOCUS;
-        }, 500);
-    });
-    $.send.on("singletap", function(e) {
-        if ($.message.value) {
-            chat.message({
-                room: room,
-                text: $.message.value
-            });
-            $.conversation_table.appendRow(Alloy.createController("rowMessage", {
-                message: $.message.value,
-                me: !0
-            }).getView());
-            $.conversation_table.scrollToIndex(nMessages, {
-                animated: !0
-            });
-            $.message.value = "";
-            nMessages++;
-        }
-    });
-    $.textFieldRooms.on("return", function() {
-        Ti.UI.Android.hideSoftKeyboard();
-    });
+    $.options.on("click", optionsClick);
+    $.send.on("singletap", sendMessage);
+    $.textFieldRooms.on("return", closeKeyboard);
+    $.tableRooms.on("click", tableRoomsClick);
+    $.index.on("open", inOpen);
     $.index.open();
     _.extend($, exports);
 }
