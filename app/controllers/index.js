@@ -21,11 +21,12 @@ $.options.on('click', function(e){
 $.index.on('open', function(){	
 	chat.connect({
 		joinResult: function(e){			
-			$.room.text = "Room: "+ e.room;
+			$.room.text = e.room;
 			room = e.room;
 		},
 		nameResult: function(e){		
 			if(e.success){
+				$.user.text = e.name
 				//e.name
 			}	
 			//alert(e);

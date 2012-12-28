@@ -22,24 +22,48 @@
 	width:'100%',	
 	backgroundColor:'white',
 	height:'45px',	
-	layout:'horizontal'
+	//layout:'horizontal'
 },
 "#options":{
 	active:false,
 	height:'45px',
 	width:'45px',
 	left:0,
+	top:0,
 	backgroundColor:'blue'
+},
+"#user": {
+	width:Ti.UI.SIZE,
+	height:'20px',
+	text:'User',
+	textAlign:'center',
+	font:{
+		fontSize:'14px'
+	},
+	color:'black',
+	top:'0px',
+	left:'10px',
+	//backgroundColor:'green'
+},
+"#containerUser":{	
+	backgroundColor:'red',
+	left:'45px',
+	right:0,
+	height:'100%',
+	top:0
+	
 },
 "#room":{
 	width:Ti.UI.SIZE,
-	height:Ti.UI.SIZE,
+	height:'20px',
 	text:'Room',
 	textAlign:'center',
 	font:{
-		fontSize:'20px'
+		fontSize:'14px'
 	},
 	color:'black',
+	top:'20px',
+	left:'10px',
 	//backgroundColor:'green'
 },
 "#body": {

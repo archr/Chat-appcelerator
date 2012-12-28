@@ -35,7 +35,6 @@ function Controller() {
         width: "100%",
         backgroundColor: "white",
         height: "45px",
-        layout: "horizontal",
         id: "header"
     }), "View", $.__views.detail);
     $.__views.detail.add($.__views.header);
@@ -44,22 +43,48 @@ function Controller() {
         height: "45px",
         width: "45px",
         left: 0,
+        top: 0,
         backgroundColor: "blue",
         id: "options"
     }), "View", $.__views.header);
     $.__views.header.add($.__views.options);
+    $.__views.containerUser = A$(Ti.UI.createView({
+        backgroundColor: "red",
+        left: "45px",
+        right: 0,
+        height: "100%",
+        top: 0,
+        id: "containerUser"
+    }), "View", $.__views.header);
+    $.__views.header.add($.__views.containerUser);
+    $.__views.user = A$(Ti.UI.createLabel({
+        width: Ti.UI.SIZE,
+        height: "20px",
+        text: "User",
+        textAlign: "center",
+        font: {
+            fontSize: "14px"
+        },
+        color: "black",
+        top: "0px",
+        left: "10px",
+        id: "user"
+    }), "Label", $.__views.containerUser);
+    $.__views.containerUser.add($.__views.user);
     $.__views.room = A$(Ti.UI.createLabel({
         width: Ti.UI.SIZE,
-        height: Ti.UI.SIZE,
+        height: "20px",
         text: "Room",
         textAlign: "center",
         font: {
-            fontSize: "20px"
+            fontSize: "14px"
         },
         color: "black",
+        top: "20px",
+        left: "10px",
         id: "room"
-    }), "Label", $.__views.header);
-    $.__views.header.add($.__views.room);
+    }), "Label", $.__views.containerUser);
+    $.__views.containerUser.add($.__views.room);
     $.__views.body = A$(Ti.UI.createView({
         width: "100%",
         height: "100%",
@@ -127,7 +152,7 @@ function Controller() {
                 room = e.room;
             },
             nameResult: function(e) {
-                alert(e);
+                e.success && ($.user.text = e.name);
             },
             message: function(e) {
                 $.conversation_table.appendRow(Alloy.createController("rowMessage", {
