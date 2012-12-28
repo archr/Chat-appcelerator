@@ -8,7 +8,6 @@ function Controller() {
     }), "Window", null);
     $.addTopLevelView($.__views.index);
     $.__views.master = A$(Ti.UI.createView({
-        backgroundColor: "red",
         left: 0,
         width: "270px",
         top: 0,
@@ -58,7 +57,6 @@ function Controller() {
             fontSize: "20px"
         },
         color: "black",
-        backgroundColor: "green",
         id: "room"
     }), "Label", $.__views.header);
     $.__views.header.add($.__views.room);
@@ -74,15 +72,14 @@ function Controller() {
         top: 0,
         bottom: "45px",
         width: "100%",
-        backgroundColor: "red",
         minRowHeight: "30px",
+        separatorColor: "transparent",
         id: "conversation_table"
     }), "TableView", $.__views.body);
     $.__views.body.add($.__views.conversation_table);
     $.__views.container_message = A$(Ti.UI.createView({
         width: "100%",
         height: "45px",
-        backgroundColor: "green",
         bottom: 0,
         id: "container_message"
     }), "View", $.__views.body);
@@ -93,6 +90,7 @@ function Controller() {
         top: "2px",
         bottom: "2px",
         softKeyboardOnFocus: Titanium.UI.Android.SOFT_KEYBOARD_HIDE_ON_FOCUS,
+        color: "black",
         id: "message"
     }), "TextArea", $.__views.container_message);
     $.__views.container_message.add($.__views.message);

@@ -3,7 +3,6 @@ function Controller() {
     $model = arguments[0] ? arguments[0].$model : null;
     var $ = this, exports = {}, __defers = {};
     $.__views.rowMessage = A$(Ti.UI.createTableViewRow({
-        backgroundColor: "blue",
         height: Ti.UI.SIZE,
         width: Ti.UI.SIZE,
         id: "rowMessage"

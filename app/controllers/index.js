@@ -24,8 +24,11 @@ $.index.on('open', function(){
 			$.room.text = "Room: "+ e.room;
 			room = e.room;
 		},
-		nameResult: function(e){			
-			alert(e);
+		nameResult: function(e){		
+			if(e.success){
+				//e.name
+			}	
+			//alert(e);
 		},
 		message: function(e){			
 			$.conversation_table.appendRow(Alloy.createController('rowMessage',{

@@ -1,5 +1,5 @@
 "#rowMessage": {
-	backgroundColor: "blue",	
+	//backgroundColor: "blue",	
 	height: Ti.UI.SIZE,
 	width: Ti.UI.SIZE
 },
